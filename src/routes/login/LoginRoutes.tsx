@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import {Switch, Route, useLocation, useHistory} from 'react-router-dom';
 
 import loginPaths from './loginPaths';
-import TemplateLogin from '../templates/TemplateLogin';
-import LoginScreen from '../pages/login/LoginScreen';
-import SignupScreen from '../pages/signup/SignupScreen';
+import TemplateLogin from '../../templates/TemplateLogin';
+import LoginScreen from '../../pages/login/LoginScreen';
+import SignupScreen from '../../pages/signup/SignupScreen';
 
 const LoginRoutes = () => {
   const location = useLocation();

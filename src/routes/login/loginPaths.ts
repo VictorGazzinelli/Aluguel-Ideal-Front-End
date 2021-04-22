@@ -1,4 +1,4 @@
-export default class portalPaths {
+export default class loginPaths {
   static root = '/';
   static login ='/login';
   static signUp = '/signup'

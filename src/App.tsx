@@ -4,8 +4,10 @@ import 'antd/dist/antd.css';
 
 import GlobalStyle from './styles/global';
 
-import loginPaths from './routes/loginPaths';
-import LoginRoutes from './routes/LoginRoutes'
+import loginPaths from './routes/login/loginPaths';
+import LoginRoutes from './routes/login/LoginRoutes';
+import commonPaths from './routes/common/commonPaths';
+import CommonRoutes from './routes/common/CommonRoutes';
 
 const App:React.FC = () => {
   return (
@@ -13,6 +15,9 @@ const App:React.FC = () => {
       <GlobalStyle />
       <BrowserRouter>
           <Switch>
+              <Route path={commonPaths.home}>
+                  <CommonRoutes />
+              </Route>
               <Route path={loginPaths.root}>
                   <LoginRoutes />
               </Route>
