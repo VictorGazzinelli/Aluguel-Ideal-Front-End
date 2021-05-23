@@ -1,25 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-function App() {
+import 'antd/dist/antd.css';
+
+import GlobalStyle from './styles/global';
+
+import loginPaths from './routes/login/loginPaths';
+import LoginRoutes from './routes/login/LoginRoutes';
+import commonPaths from './routes/common/commonPaths';
+import CommonRoutes from './routes/common/CommonRoutes';
+
+const App:React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <GlobalStyle />
+      <BrowserRouter>
+          <Switch>
+              <Route path={commonPaths.home}>
+                  <CommonRoutes />
+              </Route>
+              <Route path={loginPaths.root}>
+                  <LoginRoutes />
+              </Route>
+          </Switch>
+      </BrowserRouter>
+    </>
   );
 }
 
