@@ -22,16 +22,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LoginScreen: React.FC = () => {
+const UserScreen: React.FC = () => {
   const classes = useStyles();
 
   return(
     <>
-      <Logo />
-      <Typography component="h1" variant="h5">
-        Aluguel Ideal
-      </Typography>
       <form className={classes.form} noValidate>
+        <TextField
+          variant="filled"
+          margin="normal"
+          required
+          fullWidth
+          id="name"
+          label="Nome"
+          name="name"
+          autoComplete="name"
+          autoFocus
+        />
         <TextField
           variant="filled"
           margin="normal"
@@ -41,18 +48,16 @@ const LoginScreen: React.FC = () => {
           label="Email"
           name="email"
           autoComplete="email"
-          autoFocus
         />
         <TextField
           variant="filled"
           margin="normal"
           required
           fullWidth
-          id="password"
-          label="Senha"
-          name="password"
-          type="password"
-          autoComplete="current-password"
+          id="phone"
+          label="Telefone"
+          name="phone"
+          autoComplete="phone"
         />
         <Button
           type="submit"
@@ -61,11 +66,11 @@ const LoginScreen: React.FC = () => {
           color="primary"
           className={classes.submit}
         >
-          Entrar
+          Salvar
         </Button>
       </form>
     </>
   )
 }
 
-export default LoginScreen;
+export default UserScreen;
