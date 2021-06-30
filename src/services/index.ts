@@ -1,7 +1,7 @@
 import auth from './auth/authRequest';
-import advertisements from './advertisements/advertisementsRequest';
+import residences from './residences/residencesRequest';
 
 export default class apiRequests {
     static auth = auth;
-    static advertisements = advertisements;
+    static residences = residences;
 }

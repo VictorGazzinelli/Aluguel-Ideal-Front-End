@@ -1,134 +1,74 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import {Input, Button, Spin} from 'antd';
-import styled from 'styled-components';
+import { Flex, VStack } from '@chakra-ui/react';
+import React from 'react';
+import { faKey, faEnvelope, } from '@fortawesome/free-solid-svg-icons';
 
-import ClickableText from '../../components/ClickableText'
-
-import loginPaths from '../../routes/login/loginPaths'
-import commonPaths from '../../routes/common/commonPaths'
-import useKeyPress from '../../hooks/useKeyPress';
+import { Input, SubmitButton } from '../../components/form';
+import Logo from '../../components/Logo';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { schemaLogin } from './schema/schemaLogin';
+import { typesLogin } from './types/typesLogin';
 import useDoRequest from '../../hooks/useDoRequest';
-import requestUtils from '../../utils/requestUtils'
+import { IAuthRequest, IAuthResponse } from '../../services/auth/authInterface';
+import requestUtils from '../../utils/requestUtils';
+import { useHistory } from 'react-router-dom';
 
 const LoginScreen: React.FC = () => {
-  const history = useHistory();
-  const [emailText, setEmailText] = useState('');
-  const [passwordText, setPasswordText] = useState('');
-  const [loading, setLoading] = useState(false);
-  const enterPress = useKeyPress('Enter');
-  const loginRequest = useDoRequest((api) => api.auth.Login);
 
-  const changeLoginText = (event: any) => {
-    setEmailText(event.target.value);
-  };
+	const history = useHistory();
+	const loginRequest = useDoRequest((api) => api.auth.login)
+	const { control, handleSubmit, formState:{isSubmitting} } = useForm<typesLogin>({
+		resolver: yupResolver(schemaLogin)
+	});
 
-  const changePasswordText = (event: any) => {
-      setPasswordText(event.target.value);
-  };
+	const submitForm: SubmitHandler<typesLogin> = async(data) => {
+		await new Promise( async (resolve, reject) => {
+			const dto: IAuthRequest = {
+				grant_type: 'password',
+				client_id: 'client_id',
+				username: data.Email,
+				password: data.Senha,
+			}
+			await loginRequest.doRequest(dto)
+			.then((response: IAuthResponse) => {
+				requestUtils.setBearerToken(response.access_token)
+				history.push('/landing')
+				resolve(console.log(response))
+			})
+			.catch((err: any) => reject(console.log(err)))
+		})
+	}
 
-  const redirectSignUp = () => {
-    history.push(loginPaths.signUp);
-  };
+	return (
+		<Flex
+			w='100%'
+			h='100%'
+			align='center'
+			justify='flex-start'
+			overflow='auto'
+			flexDir='column'
+		>
+ 
+			<Flex
+				as='form'
+				width='100%' 
+				maxW={'100%'}
+				flexDir='column'
+				p='8'
+				h={'100%'}
+				onSubmit={handleSubmit(submitForm)}
+			>
+				<Logo />
+				<VStack spacing={8}>
 
-  const redirectHome = () => {
-    history.push(commonPaths.home);
-  };
+					<Input name='Email' label='Email' type="email" icon={faEnvelope} control={control}/>
+					<Input name='Senha' label='Senha' type="password" icon={faKey} control={control}/>
 
-  const onEnterPress = () => {
-    if (!enterPress) return;
-    login();
-  };
-  useEffect(onEnterPress, [enterPress]);
+					<SubmitButton isLoading={isSubmitting}>Logar</SubmitButton>
+				</VStack>
+			</Flex>
+		</Flex>
+	)
+}
 
-  const login = () => {
-    setLoading(true);
-    loginRequest.doRequest({
-      email: emailText,
-      password: passwordText,
-    })
-    .then((response) => {
-      requestUtils.setBearerToken(response.bearerToken)
-      redirectHome()
-    })
-    .catch(err =>{
-      console.error(err)
-      alert("Email ou Senha invalidos") 
-    })
-    .finally(() => setLoading(false))
-  };
-
-  return (
-    <Wrapper>
-    {
-      !loading ? (
-          <div>
-              <h2>{'Seja bem vindo!'}</h2>
-              <h4>{'Faça login na sua conta'}</h4>
-              <label>{'Email'}</label>
-              <Input
-                  size="middle"
-                  autoFocus
-                  value={emailText}
-                  onChange={changeLoginText}
-              />
-              <label>{'Senha'}</label>
-              <Input
-                  type="password"
-                  size="middle"
-                  value={passwordText}
-                  onChange={changePasswordText}
-                  suffix=
-                  {(
-                      <ClickableText onClick={redirectSignUp} className="sufix">
-                          {'Quero me cadastrar'}
-                      </ClickableText>
-                  )}
-              />
-              <div className="buttons-wrapper">
-                  <Button onClick={login} type="primary">{'Entrar'}</Button>
-              </div>
-          </div>
-      ) :
-      (
-          <div className="loading-wrapper">
-              <Spin />
-          </div>
-      )
-    }
-    </Wrapper>
-  );
-};
 export default LoginScreen;
-
-const Wrapper = styled.div`
-    display:flex;
-    flex:1;
-    flex-direction:column;
-    position: relative;
-
-    .buttons-wrapper{
-        position: absolute;
-        bottom: 0px;
-        left: 0px;
-        right: 0px;
-
-        display:flex;
-        flex:1;
-        flex-direction:column;
-    }
-
-    .invalid-field-value{
-        color:#f5222d;
-    }
-    .sufix{
-        font-weight: 600;
-    }
-
-    .loading-wrapper{
-        display:flex;
-        flex:1;
-        align-content:center;
-        justify-content:center;
-    }
-`;
