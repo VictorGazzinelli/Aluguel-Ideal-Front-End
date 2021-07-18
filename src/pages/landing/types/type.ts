@@ -1,6 +1,6 @@
 export type IFormInputs = {
-	Cidade: string;
-	Bairro: string;
-	Aluguel: string;
-	Quartos: string;
+	cityId?: string;
+	districtId?: string;
+	maxPrice?: number;
+	minBedrooms?: number;
 }

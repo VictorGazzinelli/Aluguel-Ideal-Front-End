@@ -38,19 +38,18 @@ const CommonRoutes = () => {
 					<FilterScreen />
 				</Route>
 
-				{/*<Route path={commonPaths.residence}>
-					<ResidenceScreen />
-				</Route>
-
-				
-
 				<Route path={commonPaths.user}>
 					<FormFillTemplate organismComponent={<UserScreen />}/>
 				</Route>
 
 				<Route path={commonPaths.users}>
 					<UsersScreen />
-				</Route> */}
+				</Route> 
+
+				{/*<Route path={commonPaths.residence}>
+					<ResidenceScreen />
+				</Route>
+				*/}
 
 				<Redirect from='/*' to={commonPaths.landing} />
 			</Switch>
