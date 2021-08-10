@@ -8,18 +8,23 @@ interface IResidenceContext {
   residences: UseArrayActions<Residence>,
   selectedResidence: Residence,
   setSelectedResidence: React.Dispatch<React.SetStateAction<Residence>>,
+  isUserAuthenticated: boolean,
+  setIsUserAuthenticated: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export const ResidenceContext = createContext({} as IResidenceContext);
 
 const ResidenceProvider: React.FC = ({ children }) => {
   const residences = useArray<Residence>([]);
-  const [ selectedResidence, setSelectedResidence] = useState<Residence>({} as Residence);
+  const [ selectedResidence, setSelectedResidence ] = useState<Residence>({} as Residence);
+  const [ isUserAuthenticated, setIsUserAuthenticated ] = useState<boolean>(false);
 
   const sharedValues: IResidenceContext = {
       residences,
       selectedResidence,
-      setSelectedResidence
+      setSelectedResidence,
+      isUserAuthenticated,
+      setIsUserAuthenticated
   };
 
   return (

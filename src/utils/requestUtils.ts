@@ -21,4 +21,14 @@ export default class requestUtils {
             },
         });
     }
+
+    static hasAuthorizationHeader() : boolean {
+        let x = false;
+        console.log(x)
+        if(!this.RequestInstance.defaults.headers.Authorization)
+            return false;
+        x = this.RequestInstance.defaults.headers.Authorization.replace('Bearer','').trim().length > 0;
+        console.log(x)
+        return x;
+    }
 }

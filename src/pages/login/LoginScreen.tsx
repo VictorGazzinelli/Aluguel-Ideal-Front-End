@@ -1,5 +1,5 @@
 import { Flex, VStack } from '@chakra-ui/react';
-import React from 'react';
+import React, { useContext } from 'react';
 import { faKey, faEnvelope, } from '@fortawesome/free-solid-svg-icons';
 
 import { Input, SubmitButton } from '../../components/form';
@@ -12,11 +12,13 @@ import useDoRequest from '../../hooks/useDoRequest';
 import { IAuthRequest, IAuthResponse } from '../../services/auth/authInterface';
 import requestUtils from '../../utils/requestUtils';
 import { useHistory } from 'react-router-dom';
+import { ResidenceContext } from '../../providers/ResidenceProvider';
 
 const LoginScreen: React.FC = () => {
 
 	const history = useHistory();
 	const loginRequest = useDoRequest((api) => api.auth.login)
+	const { setIsUserAuthenticated } = useContext(ResidenceContext);
 	const { control, handleSubmit, formState:{isSubmitting} } = useForm<typesLogin>({
 		resolver: yupResolver(schemaLogin)
 	});
@@ -31,7 +33,9 @@ const LoginScreen: React.FC = () => {
 			}
 			await loginRequest.doRequest(dto)
 			.then((response: IAuthResponse) => {
+				console.log(response)
 				requestUtils.setBearerToken(response.access_token)
+				setIsUserAuthenticated(true);
 				history.push('/landing')
 				resolve(console.log(response))
 			})
