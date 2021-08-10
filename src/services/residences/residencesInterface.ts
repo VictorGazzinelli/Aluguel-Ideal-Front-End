@@ -1,4 +1,4 @@
-import { IQueryResult } from "../common/commonInterface";
+import { IQueryResult2 } from "../common/commonInterface";
 
 export interface IResidenceDto {
   id: string,
@@ -12,6 +12,15 @@ export interface IResidenceDto {
   description: string,
 }
 
+export interface IFlatDto extends IResidenceDto {
+  condominium: number,
+  floor: number,
+}
+
+export interface IHouseDto extends IResidenceDto {
+  yardArea: number,
+}
+
 export interface IGetResidencesRequest {
 	cityId?: string,
 	districtId?: string,
@@ -19,7 +28,7 @@ export interface IGetResidencesRequest {
 	minBedrooms?: number
 }
 
-export interface IGetResidencesResponse extends IQueryResult<IResidenceDto>{}
+export interface IGetResidencesResponse extends IQueryResult2<IHouseDto | IFlatDto>{}
 
 
 

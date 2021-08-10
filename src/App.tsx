@@ -6,16 +6,19 @@ import CommonRoutes from './routes/common/CommonRoutes';
 import { themeConfig } from './styles/themeConfig';
 
 import "@fontsource/poppins"
+import ResidenceProvider from './providers/ResidenceProvider';
 
 const App:React.FC = () =>  (
 	<ChakraProvider theme={themeConfig}>
-		<BrowserRouter> 
-			<Switch>
-				<Route path={commonPaths.root}>
-					<CommonRoutes />
-				</Route>
-			</Switch> 
-		</BrowserRouter>	
+		<ResidenceProvider>
+			<BrowserRouter> 
+				<Switch>
+					<Route path={commonPaths.root}>
+						<CommonRoutes />
+					</Route>
+				</Switch> 
+			</BrowserRouter>	
+		</ResidenceProvider>
 	</ChakraProvider>
 ); 
 

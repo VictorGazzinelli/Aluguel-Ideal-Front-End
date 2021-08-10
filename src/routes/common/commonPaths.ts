@@ -1,6 +1,5 @@
 export default class commonPaths {
   static root = '/';
-
   static filter = '/filter';
   static landing = '/landing';
   static login = '/login';

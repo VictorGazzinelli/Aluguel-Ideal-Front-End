@@ -1,26 +1,33 @@
 import { Flex, InputLeftElement, VStack, Input, InputGroup, Button, InputRightElement } from '@chakra-ui/react';
-import React, {useRef} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import Logo from '../../components/Logo'
 import { useHistory } from 'react-router-dom';
 import useDoRequest from '../../hooks/useDoRequest';
 import SearchIcon from '@material-ui/icons/Search';
+import { Residence, ResidenceContext } from '../../providers/ResidenceProvider';
+import ResidenceCard from '../../components/ResidenceCard';
 
 const SearchScreen: React.FC = () => {
 	const history = useHistory();
-	const getResidencesRequest = useDoRequest((api) => api.residences.get);
 	const timeoutRef = useRef<NodeJS.Timeout>();
+	const { residences, setSelectedResidence } = useContext(ResidenceContext);
 
 	const handleSearch = (evt: React.ChangeEvent<HTMLInputElement>) => {
 		const changeText = evt.target.value;
 		if(timeoutRef.current) clearTimeout(timeoutRef.current);
 		//Todo: Chamar a api pra listar o texto
-		timeoutRef.current = setTimeout(() => alert('toma seu texto'+changeText), 700);
+		//timeoutRef.current = setTimeout(() => alert('toma seu texto'+changeText), 700);
 	}
 
-	const handleClick = () => {
+	const onFilterButtonClick = () => {
 		history.push('/filter');
+	}
+
+	const onResidenceCardClick = (residence: Residence) => {
+		setSelectedResidence(residence);
+		history.push(`/residence/${residence.id}`);
 	}
 
 	return (<Flex
@@ -54,14 +61,18 @@ const SearchScreen: React.FC = () => {
 					<Button
 						h="1.75rem"
 						size="sm"
-						onClick={handleClick}
+						onClick={onFilterButtonClick}
 					>
 						<MenuIcon style={{ fontSize: 'medium', color: 'blue' }} />
 					</Button>
 				</InputRightElement>
 			</InputGroup>
 		</Flex>
-	</Flex>)
+		{
+			residences.value?.map((residence: Residence) => <ResidenceCard residence={residence} key={residence.id} onClick={() => onResidenceCardClick(residence)} />)
+		}
+	</Flex>
+	)
 }
 
 export default SearchScreen;

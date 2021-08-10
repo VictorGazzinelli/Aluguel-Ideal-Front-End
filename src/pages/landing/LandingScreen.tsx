@@ -1,5 +1,5 @@
 import { Button, Flex, FormControl, FormLabel, Select, VStack } from '@chakra-ui/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import Logo from '../../components/Logo'
@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom';
 import useDoRequest from '../../hooks/useDoRequest';
 import { IGetResidencesRequest, IGetResidencesResponse } from '../../services/residences/residencesInterface';
 import { ICityDto, IGetCitiesResponse } from '../../services/cities/citiesInterface';
+import { ResidenceContext } from '../../providers/ResidenceProvider';
 
 
 interface KeyValue {
@@ -27,6 +28,7 @@ const LandingScreen: React.FC = () => {
 		resolver: yupResolver(schema)
 	});
 	const [cities, setCities] = useState<ICityDto[]>([])
+	const { residences } = useContext(ResidenceContext)
 
 	const cleanFormData = (formData: any) : IFormInputs => {
 		for (let propName in formData) {
@@ -39,19 +41,15 @@ const LandingScreen: React.FC = () => {
 
 	const submitForm: SubmitHandler<IFormInputs> = async(data) => {
 		const {cityId, maxPrice, minBedrooms} = cleanFormData(data)
-		await new Promise( async (resolve, reject) => {
-			const dto: IGetResidencesRequest = {
-				cityId,
-				maxPrice,
-				minBedrooms,
-			}
-			await getResidencesRequest.doRequest(dto)
-			.then((response: IGetResidencesResponse) => {
-				history.push('/search')
-				resolve(console.log(response))
-			})
-			.catch((err: any) => reject(console.log(err)))
-		})
+		const dto: IGetResidencesRequest = {
+			cityId,
+			maxPrice,
+			minBedrooms,
+		}
+		const getResidencesResponse : IGetResidencesResponse = await getResidencesRequest.doRequest(dto);
+		console.log('getResidencesResponse', getResidencesResponse)
+		residences.setValue(getResidencesResponse.Items)
+		history.push('/search')
 	}
 
 	const onComponentMount = () => {

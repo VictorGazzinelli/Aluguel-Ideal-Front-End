@@ -46,10 +46,10 @@ const CommonRoutes = () => {
 					<UsersScreen />
 				</Route> 
 
-				{/*<Route path={commonPaths.residence}>
+				<Route path={commonPaths.residence}>
 					<ResidenceScreen />
 				</Route>
-				*/}
+				
 
 				<Redirect from='/*' to={commonPaths.landing} />
 			</Switch>
